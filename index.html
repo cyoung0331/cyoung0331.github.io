@@ -54,7 +54,7 @@
     	request.onload = function() {
 
         	var data = JSON.parse(request.responseText);
-			majors = data.filter(getMajor)   // filter data for selected meal
+			major = data.filter(getMajor)   // filter data for selected meal
 		
 			function getMajor(item) {
             	return item.major == selected_major;
