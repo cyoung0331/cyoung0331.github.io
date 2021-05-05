@@ -26,7 +26,6 @@
 
 <div ng-app = "studentsApp">
 
-
      <div ng-view></div>    <!-- partial pages substituted here -->
 
 
@@ -47,7 +46,7 @@ app.config(function($routeProvider) {
           controller : 'allCtrl'
       })
       .when('/gpa', {
-          templateUrl : 'partials/gpa.html',    // show all cars
+          templateUrl : 'partials/gpa.html',
           controller : 'gpaCtrl'
       })
       .otherwise({
@@ -67,9 +66,9 @@ app.controller('gpaCtrl', function($scope, $http) {
 
 app.controller('allCtrl', function($scope, $http) {
 
-   $http.get("students.json")          // get all the cars table
+   $http.get("students.json")
      .then(function (response) {
-	    $scope.students = response.data;
+	    $scope.student = response.data;
      });
 
 });
