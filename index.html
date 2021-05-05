@@ -1,79 +1,78 @@
 <!DOCTYPE html>
-<html>
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Majors</title>
-	  
-	  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-      
-      <style> .btn{margin: 5px} </style>
-  </head>
+<html><head><title>Students</title>
+<link rel="stylesheet"     href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+ <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular-route.js"></script>
 
-  <body>
-  
-     <div class="container">
-	     <h2><b>Select a Major</b></h2>
-      
-            <div style='padding: 5px;'>    
-               <button type='button' class="btn btn-success" onClick="getData('CIT')">CIT Majors</button> 
-               <button type='button' class="btn btn-success" onClick="getData('BUS')">Business Majors</button>  
-            </div>
-      
-  		<h4>We filter our data by major.</h4>
-	     <p></p>
-                <div id="majorTable"></div>    
-     
-     </div>   <!-- end class='container'   -->
-  </body>
+</head>
+<body>
+
+<div class="container">
+<nav class="navbar navbar-inverse">
+
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">Our Website</a>
+    </div>
+    <div>
+       <ul class="nav navbar-nav">
+           <li class="active"><a href="#home">All Advisees</a></li>
+           <li><a href="#all_cars">Grade Point Averages</a></li>
+       </ul>
+    </div>
+
+</nav>    <!-- end nav-bar -->
+
+<div ng-app = "studentsApp">
 
 
-  <!-- Handlebars template -->
-<script type="text/x-handlebars-template" id="tableTemplate">
+     <div ng-view></div>    <!-- partial pages substituted here -->
 
-   <table class="table table-bordered">
-       <tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
-           {{#each rows}}
-               <tr>
-                  <td>{{name}}</td><td>{{major}}</td><td>{{midterm}}</td><td>{{final}}</td>
-               </tr>
-           {{/each}}
-   </table>
-</script>
-  
-  <!-- application ajax code -->
+
+</div>
+</div>
+
 <script>
+var app = angular.module('studentsApp', ['ngRoute']);
 
-	function getData(selected_major) {
-		var request = new XMLHttpRequest();
-    	request.open('GET', 'cit5students.json');     // open the request
+app.config(function($routeProvider) {
+    $routeProvider
+      .when('/', {
+          templateUrl : 'partials/all_students.html',    // route for the home page
+          controller : 'homeCtrl'
+      })
+      .when('/home', {
+          templateUrl : 'partials/all_students.html',
+          controller : 'homeCtrl'
+      })
+      .when('/all_cars', {
+          templateUrl : 'partials/gpa.html',    // show all cars
+          controller : 'allCtrl'
+      })
+      .otherwise({
+          redirectTo: 'partials/all_students.html'        // any other URL goes to home
+      });
+});
 
-    	request.onload = function() {
 
-        	var data = JSON.parse(request.responseText);
-			major_sel = data.filter(getMajor)   // filter data for selected meal
-		
-			function getMajor(item) {
-            	return item.major == selected_major;
-        	}
+          /*   a controller for each page  */
+app.controller('gpaCtrl', function($scope, $http) {
 
-        	if (request.status == 200) {
-              	var templateText = document.getElementById('tableTemplate').innerHTML;
-             	var compiledTemplateText = Handlebars.compile(templateText);   // get and compile template code
-              	
-              	compiledHtml = compiledTemplateText({ rows: major_sel })      // apply data to template
-              	document.getElementById('majorTable').innerHTML = compiledHtml; 	
-       	 	}
-        	else {
-            	document.querySelector('#majorTable').innerHTML = "There was an error";
-        	}
-		}
+     var today = new Date();  /* get today's date */
+     $scope.date= today.toDateString()
 
-    request.send(null);
-  }
-  
+});
+
+
+app.controller('allCtrl', function($scope, $http) {
+
+   $http.get("students.json")          // get all the cars table
+     .then(function (response) {
+	    $scope.cars = response.data;
+     });
+
+});
+
 </script>
-</html>
+</body></html>
