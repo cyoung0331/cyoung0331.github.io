@@ -40,15 +40,15 @@ app.config(function($routeProvider) {
     $routeProvider
       .when('/', {
           templateUrl : 'partials/all_students.html',    // route for the home page
-          controller : 'homeCtrl'
+          controller : 'allCtrl'
       })
       .when('/all_students', {
           templateUrl : 'partials/all_students.html',
-          controller : 'homeCtrl'
+          controller : 'allCtrl'
       })
       .when('/gpa', {
           templateUrl : 'partials/gpa.html',    // show all cars
-          controller : 'allCtrl'
+          controller : 'gpaCtrl'
       })
       .otherwise({
           redirectTo: 'partials/all_students.html'        // any other URL goes to home
@@ -69,7 +69,7 @@ app.controller('allCtrl', function($scope, $http) {
 
    $http.get("students.json")          // get all the cars table
      .then(function (response) {
-	    $scope.cars = response.data;
+	    $scope.students = response.data;
      });
 
 });
