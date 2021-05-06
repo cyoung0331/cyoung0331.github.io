@@ -23,7 +23,7 @@
 
 </nav>    <!-- end nav-bar -->
 
-<div ng-controller = "allCtrl">
+<div ng-controller = "homeCtrl">
 
 <h2>All Cars</h2>
           <p><input type='text' ng-model='search_text' > Enter Search text</p>
@@ -47,15 +47,17 @@
 </div>   <!-- end class= 'container' -->
 
 <script>
-var app = angular.module('studentsApp', []);
+var app = angular.module('homeApp', []);
 
+app.controller('homeCtrl', function($scope, $http) {
 
-app.controller('allCtrl', function($scope, $http) {
+     var today = new Date();  /* get today's date */
+     $scope.date= today.toDateString()
 
-   $http.get("students.json")          // get all the cars table
-     .then(function (response) {
-	    $scope.students = response.data;
-     });
+     $http.get("students.json")
+       .then(function (response) {
+  	    $scope.students = response.data;
+       });
 
 });
 
